@@ -36,3 +36,7 @@
 .likeCheckbox {
   display: none;
 }
+
+.clickable {
+  cursor: pointer
+}
