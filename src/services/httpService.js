@@ -11,7 +11,7 @@ axios.interceptors.response.use(null, error => {
     error.response.status < 500;
 
   if (!expectedError) {
-    logger(error);
+    logger.log(error);
     toast.error("An unexpected error occured");
   }
 

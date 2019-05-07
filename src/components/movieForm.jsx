@@ -12,20 +12,27 @@ class MovieForm extends Form {
     errors: {}
   };
 
-  async componentDidMount() {
+  async populateGenres() {
     const { data: genres } = await getGenres();
     this.setState({ genres });
+  }
 
-    const movieId = this.props.match.params.id;
-    if (movieId === "new") return;
-
+  async populateMovie() {
     try {
+      const movieId = this.props.match.params.id;
+      if (movieId === "new") return;
+
       const { data: movie } = await getMovie(movieId);
       this.setState({ data: this.mapToViewModel(movie) });
     } catch (ex) {
       if (ex.response && ex.response.status === 404)
-        return this.props.history.replace("/not-found");
+        this.props.history.replace("/not-found");
     }
+  }
+
+  async componentDidMount() {
+    await this.populateGenres();
+    await this.populateMovie();
   }
 
   mapToViewModel = movie => {
@@ -63,7 +70,7 @@ class MovieForm extends Form {
       await saveMovie(this.state.data);
       this.props.history.push("/movies");
     } catch (ex) {
-      toast.error(ex.response);
+      toast.error("Data cannot be saved!");
     }
   };
   render() {
